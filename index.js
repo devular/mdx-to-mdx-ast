@@ -18,7 +18,7 @@ module.exports = async function(mdxString) {
   const partialTree = await unified().run(markdownAstWithTokenizedEsSyntax);
   const mdxAst = treeMap(partialTree, node => {
     try {
-      // Parse eachg node with Acorn JSX parser (powers Bable)
+      // Parse each node with Acorn JSX parser (powers Babel)
       const jsxCheck = jsxParser.parse(node.value, {
         sourceType: "module"
       });
