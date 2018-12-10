@@ -1,20 +1,18 @@
 const EMPTY_NEWLINE = "\n\n";
 const IMPORT_REGEX = /^import/;
 const EXPORT_REGEX = /^export/;
-const EXPORT_DEFAULT_REGEX = /^export default/;
 
 const isImport = text => IMPORT_REGEX.test(text);
 const isExport = text => EXPORT_REGEX.test(text);
-const isExportDefault = text => EXPORT_DEFAULT_REGEX.test(text);
 
 const tokenizeEsSyntax = (eat, value) => {
   const index = value.indexOf(EMPTY_NEWLINE);
   const subvalue = index !== -1 ? value.slice(0, index) : value;
 
+  console.log({ subvalue });
   if (isExport(subvalue) || isImport(subvalue)) {
     return eat(subvalue)({
-      type: isExport(subvalue) ? "export" : "import",
-      default: isExportDefault(subvalue),
+      type: "esSyntax",
       value: subvalue
     });
   }

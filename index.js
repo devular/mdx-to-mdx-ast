@@ -22,10 +22,18 @@ module.exports = async function(mdxString) {
       const jsxCheck = jsxParser.parse(node.value, {
         sourceType: "module"
       });
+      console.log(
+        util.inspect(jsxCheck, false, null, true /* enable colors */)
+      );
+      console.log("Value: ", node.value, node.type);
       if (jsxCheck.body[0].type === "ImportDeclaration") {
         return Object.assign({}, node, { type: "import" });
       }
-      if (jsxCheck.body[0].type === "ExportDeclaration") {
+      if (
+        jsxCheck.body[0].type === "ExportDeclaration" ||
+        jsxCheck.body[0].type === "ExportDefaultDeclaration" ||
+        jsxCheck.body[0].type === "ExportNamedDeclaration"
+      ) {
         return Object.assign({}, node, { type: "export" });
       }
       if (
