@@ -18,3 +18,8 @@ Here is the spec: https://github.com/mdx-js/specification
 ## Running
 
 `yarn install && node test.js` to run the package against `fixture.mdx`
+
+## Notes
+
+- The EsSyntax tokenizer is taken straight from the MDX-JS/MDX library.
+
