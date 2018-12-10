@@ -9,7 +9,6 @@ const tokenizeEsSyntax = (eat, value) => {
   const index = value.indexOf(EMPTY_NEWLINE);
   const subvalue = index !== -1 ? value.slice(0, index) : value;
 
-  console.log({ subvalue });
   if (isExport(subvalue) || isImport(subvalue)) {
     return eat(subvalue)({
       type: "esSyntax",
