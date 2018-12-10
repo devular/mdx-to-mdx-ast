@@ -32,7 +32,8 @@ module.exports = async function(mdxString) {
       if (
         jsxCheck.body[0].type === "ExportDeclaration" ||
         jsxCheck.body[0].type === "ExportDefaultDeclaration" ||
-        jsxCheck.body[0].type === "ExportNamedDeclaration"
+        jsxCheck.body[0].type === "ExportNamedDeclaration" ||
+        jsxCheck.body[0].type === "ExportAllDeclaration"
       ) {
         return Object.assign({}, node, { type: "export" });
       }
