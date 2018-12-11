@@ -1,10 +1,8 @@
 const unified = require("unified");
 const markdown = require("remark-parse");
-const fs = require("fs");
 const flatMap = require("unist-util-flatmap");
 const acorn = require("acorn");
 const jsx = require("acorn-jsx");
-const util = require("util");
 
 const {
   jsNodeIsExport,
