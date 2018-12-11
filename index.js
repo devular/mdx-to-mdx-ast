@@ -1,11 +1,18 @@
 const unified = require("unified");
 const markdown = require("remark-parse");
 const fs = require("fs");
-const treeMap = require("unist-util-map");
+const flatMap = require("unist-util-flatmap");
 const acorn = require("acorn");
 const jsx = require("acorn-jsx");
-const esSyntax = require("./es-syntax-plugin");
 const util = require("util");
+
+const {
+  jsNodeIsExport,
+  jsNodeIsImport,
+  jsNodeIsJsxElement
+} = require("./utils");
+const esSyntax = require("./es-syntax-plugin");
+var { handleMultiProgramNodes } = require("./handle-multi-program-nodes");
 
 const jsxParser = acorn.Parser.extend(jsx());
 
@@ -16,35 +23,34 @@ const processor = unified()
 module.exports = async function(mdxString) {
   const markdownAstWithTokenizedEsSyntax = processor.parse(mdxString);
   const partialTree = await unified().run(markdownAstWithTokenizedEsSyntax);
-  const mdxAst = treeMap(partialTree, node => {
+  const mdxAst = flatMap(partialTree, node => {
     try {
       // Parse each node with Acorn JSX parser (powers Babel)
       const jsxCheck = jsxParser.parse(node.value, {
         sourceType: "module"
       });
-      if (jsxCheck.body[0].type === "ImportDeclaration") {
-        return Object.assign({}, node, { type: "import" });
+      if (jsxCheck.body.length > 1) {
+        return jsxCheck.body.map(node => {
+          return handleMultiProgramNodes(node);
+        });
       }
-      if (
-        jsxCheck.body[0].type === "ExportDeclaration" ||
-        jsxCheck.body[0].type === "ExportDefaultDeclaration" ||
-        jsxCheck.body[0].type === "ExportNamedDeclaration" ||
-        jsxCheck.body[0].type === "ExportAllDeclaration"
-      ) {
-        return Object.assign({}, node, { type: "export" });
+      if (jsNodeIsImport(jsxCheck.body[0])) {
+        return [Object.assign({}, node, { type: "import" })];
       }
-      if (
-        jsxCheck.type === "Program" &&
-        jsxCheck.body[0].type === "ExpressionStatement" &&
-        jsxCheck.body[0].expression.type === "JSXElement"
-      ) {
-        return Object.assign({}, node, { type: "jsx" });
+      if (jsNodeIsExport(jsxCheck.body[0])) {
+        return [Object.assign({}, node, { type: "export" })];
+      }
+      if (jsNodeIsJsxElement(jsxCheck.body[0])) {
+        return [Object.assign({}, node, { type: "jsx" })];
       }
     } catch (e) {
+      if (!(e instanceof SyntaxError)) {
+        console.error(e);
+      }
       // Ignore nodes that are not parseable as JSX
     }
 
-    return node;
+    return [node];
   });
 
   return mdxAst;

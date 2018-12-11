@@ -1,12 +1,22 @@
 import { Baz } from "./Fixture";
 import { Buz } from "./Fixture";
+import Foo from "./bar";
+export default Foo;
+
+import { Baz } from "./Fixture";
+import { Buz } from "./Fixture";
+
+import Foo from "./bar";
+export default Foo;
+
+# H2 this is a thing
 
 export const foo = {
   hi: `Fudge ${Baz.displayName || "Baz"}`,
   authors: ["fred", "sally"]
 };
 
-# Hello, world!
+<Component2 />
 
 I'm an awesome paragraph.
 
@@ -18,9 +28,14 @@ I'm an awesome paragraph.
   {/* another commment */}
 </Foo>
 
+export { foo } from "./foo";
+
 ```
 test codeblock
 ```
+
+export { default } from './baz'
+
 
 ```js
 module.exports = "test";
