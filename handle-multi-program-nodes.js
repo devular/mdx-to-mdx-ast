@@ -11,18 +11,18 @@ module.exports.handleMultiProgramNodes = function(jsNode) {
   if (jsNodeIsImport(jsNode)) {
     return Object.assign({
       type: "import",
-      value: value
+      value
     });
   } else if (jsNodeIsExport(jsNode)) {
     return Object.assign({
       type: "export",
-      value: value
+      value
     });
   } else {
     console.log(
       Object.assign({
         type: "esSyntax",
-        value: escodegen.generate(jsNode)
+        value
       })
     );
     throw new Error("Unsupported ES Syntax");
