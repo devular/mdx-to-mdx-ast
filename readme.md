@@ -17,7 +17,7 @@ Here is the spec: https://github.com/mdx-js/specification
 
 ## Running
 
-`yarn install && node test.js` to run the package against `fixture.mdx`
+`yarn install && yarn test` to run the package against `test/fixture.mdx`
 
 ## Notes
 
